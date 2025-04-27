@@ -1,5 +1,6 @@
 package ru.example.KirillTestBot.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -7,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.example.KirillTestBot.config.BotConfig;
 
+@Slf4j
 @Service
 public class TelegramBot extends TelegramLongPollingBot {
 
@@ -24,6 +26,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         if (update.hasMessage() && update.getMessage().hasText()) {
             var text = update.getMessage().getText().toLowerCase();
+            log.info("{} drank: {}", userName, text);
             switch (text) {
                 case "/start": startCommandReceived(chatId, userName);
                     break;
@@ -69,8 +72,8 @@ public class TelegramBot extends TelegramLongPollingBot {
         var message = new SendMessage(chatId.toString(), text);
         try {
             execute(message);
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+        } catch (TelegramApiException ex) {
+            log.error("Error sending message from bot: {}", ex.getMessage(), ex);
         }
     }
 
