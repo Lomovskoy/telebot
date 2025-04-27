@@ -11,9 +11,7 @@ import ru.example.KirillTestBot.config.BotConfig;
 @Slf4j
 @Service
 public class TelegramBot extends TelegramLongPollingBot {
-
-    private final BotConfig botConfig;
-    private final String defaultMessage = "Хуйню пишешь!";
+    public final BotConfig botConfig;
 
     public TelegramBot(BotConfig botConfig) {
         this.botConfig = botConfig;
@@ -27,6 +25,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             var text = update.getMessage().getText().toLowerCase();
             log.info("{} drank: {}", userName, text);
+            String defaultMessage = "Хуйню пишешь!";
             switch (text) {
                 case "/start": startCommandReceived(chatId, userName);
                     break;

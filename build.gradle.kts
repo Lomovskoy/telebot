@@ -19,7 +19,8 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
-//	implementation("org.telegram:telegrambots-spring-boot-starter:4.2")
+	implementation("org.springframework.boot:spring-boot-starter-jpa")
+
 	implementation("org.telegram:telegrambots:5.6.0")
 
 	compileOnly("org.projectlombok:lombok:1.18.38")
@@ -27,6 +28,8 @@ dependencies {
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+//	implementation("org.telegram:telegrambots-spring-boot-starter:4.2")
 }
 
 tasks.withType<Test> {
