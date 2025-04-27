@@ -11,6 +11,8 @@ default.datasource:
     idle-timeout: 10000
     max-lifetime: 60000
 
+server:
+  port: 8081
 spring:
   application:
     name: ${SPRING_APPLICATION_NAME:KirillTestBot}

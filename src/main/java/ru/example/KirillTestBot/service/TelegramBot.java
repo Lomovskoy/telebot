@@ -12,6 +12,17 @@ import ru.example.KirillTestBot.config.BotConfig;
 @Service
 public class TelegramBot extends TelegramLongPollingBot {
     public final BotConfig botConfig;
+    public static String HELP_MESSAGE = """
+        Здравствуйте, я бот Марии Виноградовой, от которой все-все-все в ахуе.\s
+        С помошью меня вы можете оформить подписку, и получать видеоулекии и задания.
+        Мои команды:
+                /start - запускает бота
+                /stop - останавливает бота
+                /data - Получить информацию о подписке
+                /freeze - Заморозить подписку
+                /help - Информация как использовать этого бота
+                /settings - Установите ваши предпочтения
+   \s""";
 
     public TelegramBot(BotConfig botConfig) {
         this.botConfig = botConfig;
@@ -25,13 +36,14 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             var text = update.getMessage().getText().toLowerCase();
             log.info("{} drank: {}", userName, text);
-            String defaultMessage = "Хуйню пишешь!";
             switch (text) {
                 case "/start": startCommandReceived(chatId, userName);
                     break;
                 case "/stop": stopCommandReceived(chatId, userName);
                     break;
-                default: sendMessage(chatId, defaultMessage);
+                case "/help": sendMessage(chatId, HELP_MESSAGE);
+                    break;
+                default: sendMessage(chatId, "Хуйню пишешь!");
                     break;
             }
         } else {

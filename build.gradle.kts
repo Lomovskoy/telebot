@@ -19,10 +19,11 @@ repositories {
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
-	implementation("org.springframework.boot:spring-boot-starter-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
 	implementation("org.telegram:telegrambots:5.6.0")
 	implementation("org.flywaydb:flyway-core:10.17.3")
+	implementation("com.h2database:h2:2.3.232")
 
 	compileOnly("org.projectlombok:lombok:1.18.38")
 	annotationProcessor("org.projectlombok:lombok:1.18.38")
