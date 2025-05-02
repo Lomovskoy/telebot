@@ -1,5 +1,6 @@
-package ru.example.KirillTestBot.service;
+package ru.example.KirillTestBot.bot;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
@@ -7,25 +8,21 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.example.KirillTestBot.config.BotConfig;
+import ru.example.KirillTestBot.service.MenuAnswerService;
+import ru.example.KirillTestBot.service.UserService;
 
 @Slf4j
 @Service
-public class TelegramBot extends TelegramLongPollingBot {
-    public final BotConfig botConfig;
-    public static String HELP_MESSAGE = """
-        Здравствуйте, я бот Марии Виноградовой, от которой все-все-все в ахуе.\s
-        С помошью меня вы можете оформить подписку, и получать видеоулекии и задания.
-        Мои команды:
-                /start - запускает бота
-                /stop - останавливает бота
-                /data - Получить информацию о подписке
-                /freeze - Заморозить подписку
-                /help - Информация как использовать этого бота
-                /settings - Установите ваши предпочтения
-   \s""";
+public class TelegramBotService extends TelegramLongPollingBot {
+    @Getter
+    private final BotConfig botConfig;
+    private final UserService userService;
+    private final MenuAnswerService menuAnswerService;
 
-    public TelegramBot(BotConfig botConfig) {
+    public TelegramBotService(BotConfig botConfig, UserService userService, MenuAnswerService menuAnswerService) {
         this.botConfig = botConfig;
+        this.userService = userService;
+        this.menuAnswerService = menuAnswerService;
     }
 
     @Override
@@ -41,7 +38,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     break;
                 case "/stop": stopCommandReceived(chatId, userName);
                     break;
-                case "/help": sendMessage(chatId, HELP_MESSAGE);
+                case "/help": sendMessage(chatId, menuAnswerService.getMessageToCommand(text));
                     break;
                 default: sendMessage(chatId, "Хуйню пишешь!");
                     break;

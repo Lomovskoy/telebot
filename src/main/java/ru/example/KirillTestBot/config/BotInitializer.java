@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
-import ru.example.KirillTestBot.service.TelegramBot;
+import ru.example.KirillTestBot.bot.TelegramBotService;
 
 import java.util.ArrayList;
 
@@ -18,14 +18,14 @@ import java.util.ArrayList;
 @Component
 public class BotInitializer {
 
-    private final TelegramBot telegramBot;
+    private final TelegramBotService telegramBotService;
 
-    public BotInitializer(TelegramBot telegramBot) {
-        this.telegramBot = telegramBot;
+    public BotInitializer(TelegramBotService telegramBotService) {
+        this.telegramBotService = telegramBotService;
         var listOfCommands = new ArrayList<BotCommand>();
-        telegramBot.botConfig.menu.forEach((k, v) -> listOfCommands.add(new BotCommand(String.format("/%s",k), v)));
+        telegramBotService.getBotConfig().menu.forEach((k, v) -> listOfCommands.add(new BotCommand(String.format("/%s",k), v)));
         try {
-            this.telegramBot.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
+            this.telegramBotService.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
         } catch (TelegramApiException e) {
             log.error("Error setting bot's command list: {}", e.getMessage());
         }
@@ -34,7 +34,7 @@ public class BotInitializer {
     public void init() {
         try {
             var telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(telegramBot);
+            telegramBotsApi.registerBot(telegramBotService);
         } catch (TelegramApiException ex) {
             log.error("Error registering telegram bot: {}", ex.getMessage(), ex);
         }
