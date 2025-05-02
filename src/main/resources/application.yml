@@ -22,7 +22,7 @@ spring:
 
 bot:
   name: 'KirillTestBot'
-  token: '7944957400:AAHpaUSltJSiOl6o3ao0-xJGkLCAbQEIgHM'
+  token: 'XXX'
   menu:
     start: 'Получить приветственное сообщение'
     data: 'Получить информацию о подписке'
