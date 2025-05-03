@@ -34,7 +34,10 @@ public class TelegramBotService extends TelegramLongPollingBot {
             var text = update.getMessage().getText().toLowerCase();
             log.info("{} drank: {}", userName, text);
             switch (text) {
-                case "/start": startCommandReceived(chatId, userName);
+                case "/start": {
+                    userService.registerUser(update.getMessage());
+                    startCommandReceived(chatId, userName);
+                }
                     break;
                 case "/stop": stopCommandReceived(chatId, userName);
                     break;
@@ -61,7 +64,6 @@ public class TelegramBotService extends TelegramLongPollingBot {
     private void startCommandReceived(long chatId, String userName) {
         var message = String.format("%s хули ты пишешь?!", userName);
         sendMessage(chatId, message);
-
     }
 
     private void stopCommandReceived(long chatId, String userName) {

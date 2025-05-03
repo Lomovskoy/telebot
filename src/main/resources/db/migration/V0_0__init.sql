@@ -8,10 +8,10 @@ CREATE TABLE menu_answer
 
 CREATE TABLE user_data
 (
-    id            BIGINT,
+    chat_id            BIGINT,
     first_name    VARCHAR(100) NOT NULL,
     last_name     VARCHAR(100) NOT NULL,
     user_name     VARCHAR(100) NOT NULL,
     registered_at TIMESTAMP,
-    PRIMARY KEY (id)
+    PRIMARY KEY (chat_id)
 );
