@@ -8,8 +8,8 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.example.KirillTestBot.config.BotConfig;
-import ru.example.KirillTestBot.service.MenuAnswerService;
 import ru.example.KirillTestBot.service.UserService;
+import ru.example.KirillTestBot.model.enums.Messages;
 
 @Slf4j
 @Service
@@ -17,12 +17,10 @@ public class TelegramBotService extends TelegramLongPollingBot {
     @Getter
     private final BotConfig botConfig;
     private final UserService userService;
-    private final MenuAnswerService menuAnswerService;
 
-    public TelegramBotService(BotConfig botConfig, UserService userService, MenuAnswerService menuAnswerService) {
+    public TelegramBotService(BotConfig botConfig, UserService userService) {
         this.botConfig = botConfig;
         this.userService = userService;
-        this.menuAnswerService = menuAnswerService;
     }
 
     @Override
@@ -30,24 +28,22 @@ public class TelegramBotService extends TelegramLongPollingBot {
         long chatId = update.getMessage().getChatId();
         var userName = update.getMessage().getChat().getFirstName();
 
-        if (update.hasMessage() && update.getMessage().hasText()) {
-            var text = update.getMessage().getText().toLowerCase();
-            log.info("{} drank: {}", userName, text);
-            switch (text) {
-                case "/start": {
-                    userService.registerUser(update.getMessage());
-                    startCommandReceived(chatId, userName);
-                }
-                    break;
-                case "/stop": stopCommandReceived(chatId, userName);
-                    break;
-                case "/help": sendMessage(chatId, menuAnswerService.getMessageToCommand(text));
-                    break;
-                default: sendMessage(chatId, "Хуйню пишешь!");
-                    break;
+        var text = update.getMessage().getText().toLowerCase();
+        var message = Messages.getMessageToKey(text);
+        log.info("{} drank: {}", userName, text);
+
+        switch (message) {
+            case Messages.START: {
+                userService.registerUser(update.getMessage());
+                sendMessage(chatId, message.getMessage());
             }
-        } else {
-            defaultCommandReceived(chatId, userName, "/start", "/stop");
+            break;
+            case Messages.STOP, HELP, DATA, FREEZE:
+                sendMessage(chatId, message.getMessage());
+                break;
+            default:
+                sendMessage(chatId, Messages.DEFAULT.getMessage());
+                break;
         }
     }
 
@@ -59,23 +55,6 @@ public class TelegramBotService extends TelegramLongPollingBot {
     @Override
     public String getBotToken() {
         return botConfig.getToken();
-    }
-
-    private void startCommandReceived(long chatId, String userName) {
-        var message = String.format("%s хули ты пишешь?!", userName);
-        sendMessage(chatId, message);
-    }
-
-    private void stopCommandReceived(long chatId, String userName) {
-        var message = String.format("%s пошёл на хуй!", userName);
-        sendMessage(chatId, message);
-
-    }
-
-    private void defaultCommandReceived(long chatId, String userName, String start, String stop) {
-        var message = String.format("%s я умею %s и %s в остальном пошел на хуй!", userName, start, stop);
-        sendMessage(chatId, message);
-
     }
 
     private void sendMessage(Long chatId, String text) {
