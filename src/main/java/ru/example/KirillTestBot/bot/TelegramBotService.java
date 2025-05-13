@@ -34,13 +34,24 @@ public class TelegramBotService extends TelegramLongPollingBot {
         log.info("{} drank: {}", userName, text);
 
         switch (message) {
-            case Messages.START: {
+            case Messages.START:
                 userService.registerUser(update.getMessage());
                 sendMessage(chatId, EmojiParser.parseToUnicode(message.getMessage()));
-            }
             break;
-            case Messages.STOP, HELP, DATA, FREEZE:
+            case Messages.DATA:
+                var messageData = userService.getData(chatId);
+                sendMessage(chatId, EmojiParser.parseToUnicode(String.format(message.getMessage(), messageData)));
+                break;
+            case Messages.HELP:
                 sendMessage(chatId, EmojiParser.parseToUnicode(message.getMessage()));
+                break;
+            case Messages.STOP:
+                userService.deactivateUser(chatId);
+                sendMessage(chatId, EmojiParser.parseToUnicode(message.getMessage()));
+                break;
+            case Messages.SUBSCRIBE:
+                var messageSubscribe = userService.subscribeUser(chatId);
+                sendMessage(chatId, EmojiParser.parseToUnicode(messageSubscribe));
                 break;
             default:
                 sendMessage(chatId, EmojiParser.parseToUnicode(Messages.DEFAULT.getMessage()));

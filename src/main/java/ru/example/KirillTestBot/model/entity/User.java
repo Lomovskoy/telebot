@@ -25,4 +25,19 @@ public class User {
     private String userName;
     @Column(name = "registered_at")
     private LocalDateTime registeredAt;
+    @Column(name = "subscription_start_date")
+    private LocalDateTime subscriptionStartDate;
+    @Column(name = "subscription_end_date")
+    private LocalDateTime subscriptionEndDate;
+    @Column(name = "active")
+    private Boolean active;
+
+    public User(Long chatId, String firstName, String lastName, String userName, LocalDateTime registeredAt) {
+        this.chatId = chatId;
+        this.registeredAt = registeredAt;
+        this.userName = userName;
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.active = true;
+    }
 }
