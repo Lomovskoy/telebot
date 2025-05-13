@@ -24,6 +24,7 @@ dependencies {
 	implementation("org.telegram:telegrambots:5.6.0")
 	implementation("org.flywaydb:flyway-database-postgresql")
 	implementation("org.postgresql:postgresql:42.7.5")
+	implementation("com.vdurmont:emoji-java:2.2.0")
 
 	compileOnly("org.projectlombok:lombok:1.18.38")
 	annotationProcessor("org.projectlombok:lombok:1.18.38")

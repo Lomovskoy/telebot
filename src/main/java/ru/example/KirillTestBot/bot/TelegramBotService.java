@@ -1,5 +1,6 @@
 package ru.example.KirillTestBot.bot;
 
+import com.vdurmont.emoji.EmojiParser;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -35,14 +36,14 @@ public class TelegramBotService extends TelegramLongPollingBot {
         switch (message) {
             case Messages.START: {
                 userService.registerUser(update.getMessage());
-                sendMessage(chatId, message.getMessage());
+                sendMessage(chatId, EmojiParser.parseToUnicode(message.getMessage()));
             }
             break;
             case Messages.STOP, HELP, DATA, FREEZE:
-                sendMessage(chatId, message.getMessage());
+                sendMessage(chatId, EmojiParser.parseToUnicode(message.getMessage()));
                 break;
             default:
-                sendMessage(chatId, Messages.DEFAULT.getMessage());
+                sendMessage(chatId, EmojiParser.parseToUnicode(Messages.DEFAULT.getMessage()));
                 break;
         }
     }
